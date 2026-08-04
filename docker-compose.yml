@@ -1,0 +1,7 @@
+services:
+  packaide-irregular-stock:
+    build: .
+    image: packaide-irregular-stock-worker:dev
+    container_name: packaide-irregular-stock-worker
+    volumes:
+      - ./test_input.json:/test_input.json:ro

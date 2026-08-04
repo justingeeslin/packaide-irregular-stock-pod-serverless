@@ -1,0 +1,10 @@
+{
+  "input": {
+    "stock_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 2.5 2.5\" width=\"2.5\" height=\"2.5\"><circle id=\"stock\" cx=\"1.25\" cy=\"1.25\" r=\"1.25\" fill=\"none\" stroke=\"black\"/></svg>",
+    "parts_svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1 1\" width=\"1\" height=\"1\"><circle id=\"part-a\" cx=\"0.5\" cy=\"0.5\" r=\"0.35\"/><circle id=\"part-b\" cx=\"0.5\" cy=\"0.5\" r=\"0.35\"/></svg>",
+    "tolerance": 0.03,
+    "offset": 0,
+    "rotations": 1,
+    "persist": false
+  }
+}
