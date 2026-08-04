@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import logging
 from collections.abc import Mapping, Sequence
 from typing import Any, Callable
 
 
 PackIrregular = Callable[..., tuple[list[tuple[int, str]], int, int]]
+LOGGER = logging.getLogger(__name__)
+LOGGER.addHandler(logging.NullHandler())
 
 PACK_OPTION_KEYS = {
     "offset",
@@ -28,6 +31,7 @@ def handler(job: Mapping[str, Any]) -> dict[str, Any]:
         job_input = _extract_job_input(job)
         return pack_job_input(job_input)
     except InputError as error:
+        LOGGER.warning("Invalid Packaide worker input: %s", error)
         return {"error": str(error)}
 
 
@@ -35,12 +39,25 @@ def pack_job_input(job_input: Mapping[str, Any]) -> dict[str, Any]:
     stock_svgs = _extract_stock_svgs(job_input)
     shapes_svg = _extract_shapes_svg(job_input)
     pack_options = _extract_pack_options(job_input)
+    LOGGER.info(
+        "Starting Packaide job: stock_count=%d stock_chars=%d shapes_chars=%d options=%s",
+        len(stock_svgs),
+        sum(len(svg) for svg in stock_svgs),
+        len(shapes_svg),
+        sorted(pack_options),
+    )
 
     pack_irregular = _load_pack_irregular()
     outputs, placed, unplaced = pack_irregular(
         stock_svgs,
         shapes_svg,
         **pack_options,
+    )
+    LOGGER.info(
+        "Finished Packaide job: outputs=%d placed=%d unplaced=%d",
+        len(outputs),
+        placed,
+        unplaced,
     )
 
     serialized_outputs = [
@@ -138,4 +155,8 @@ def _is_nonempty_string(value: object) -> bool:
 if __name__ == "__main__":
     import runpod
 
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    )
     runpod.serverless.start({"handler": handler})

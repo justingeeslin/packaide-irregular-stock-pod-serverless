@@ -63,7 +63,16 @@ python3 -m unittest discover
 
 ## Build
 
-The component requires Python 3.14 and builds Packaide's native extension from `justingeeslin/Packaide@develop`. The Dockerfile therefore uses `python:3.14-slim`, installs CGAL build dependencies, and builds Boost.Python for Python 3.14 before `pip install -r requirements.txt`.
+The component requires Python 3.14 and builds Packaide's native extension from `justingeeslin/Packaide@develop`. The Dockerfile therefore uses `python:3.14-slim`, installs CGAL build dependencies in a builder stage, builds Boost.Python for Python 3.14, installs the Python dependencies into `/opt/venv`, then copies only the runtime pieces into the final image.
+
+The build emits milestone lines prefixed with `===`, including:
+
+- `=== installing native build dependencies`
+- `=== compiling and installing Boost.Python`
+- `=== verifying native Packaide and RunPod imports`
+- `=== verifying runtime imports and handler syntax`
+
+If a managed builder only shows the clone/cache messages and none of those markers, the failure is happening before Dockerfile execution or the platform is suppressing Docker build output.
 
 Build for RunPod:
 
