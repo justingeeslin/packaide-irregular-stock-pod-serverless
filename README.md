@@ -91,3 +91,5 @@ Then mount the sample input:
 ```bash
 docker run --rm -v "$PWD/test_input.json:/test_input.json:ro" packaide-irregular-stock-worker:dev
 ```
+
+updating dependencies; trigger a build please
